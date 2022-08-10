@@ -1,0 +1,6 @@
+image: global_map.png
+resolution: 0.1
+origin: [-109, 954, 0]
+occupied_thresh: 0.45
+free_thresh: 0.1
+negate: 0

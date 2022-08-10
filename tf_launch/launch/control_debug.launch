@@ -1,0 +1,11 @@
+<launch>
+	<node name="global_path" pkg="global_path" type="global_path" output="screen" 
+	        respawn="true" /> 
+	<node pkg="morai_gps" type="gps.py" name="odometry"  output="screen" />
+	<!--<node pkg="morai_control" type="morai_control" name="control"  output="screen" />-->
+
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find morai_launch)/rviz/setting.rviz"/>
+
+
+</launch>
+

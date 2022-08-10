@@ -1,0 +1,13 @@
+<launch>
+	<node pkg="global_path_selfcar" type="global_path_selfcar" name="global_path" output="screen">
+		<!--ochang-->
+		<!--<param name="UTM_OFFSET_X" type="double" value="361001.412425" />
+		<param name="UTM_OFFSET_Y" type="double" value="4065821.07176" />-->
+		<!--k-city-->
+		<param name="UTM_OFFSET_X" type="double" value="302533.174487" />
+		<param name="UTM_OFFSET_Y" type="double" value="4124215.34631" />
+	</node>
+
+
+</launch>
+

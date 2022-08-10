@@ -1,0 +1,18 @@
+<launch>
+	<node pkg="point_tracking" type="point_tracking_node" name="control"  output="screen" >
+		<!--topic name-->
+		<param name="lidar_point_topic"	type="string"	value="center_point" />
+		<param name="twist_topic"	type="string"	value="cmd_vel" />
+
+		<!--control parameter-->
+		<param name="VL"	type="double"	value="1.0" />
+		<param name="velocity"	type="int"	value="50" />
+		<param name="back_x"	type="double"	value="-1.7" />
+		<param name="back_y"	type="double"	value="0.0" />
+		<param name="max_lfd"	type="double"	value="10.0" />
+		<param name="min_lfd"	type="double"	value="5.0" />
+		<param name="vel_param"	type="double"	value="5.0" />
+	</node>
+
+
+</launch>

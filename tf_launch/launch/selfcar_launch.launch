@@ -1,0 +1,16 @@
+<launch>
+  	<include file="$(find global_path_selfcar)/launch/path.launch"/>
+
+	<node pkg="selfcar_launch" type="tf_make" name="tf"/>
+	
+	<include file="$(find local_path_control)/launch/control.launch"/>
+	
+	<include file="$(find localizer)/launch/localizer.launch"/>
+	
+	<include file="$(find linepoints_map_pkg)/launch/linepoints_map_ctrack.launch"/>
+	
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find selfcar_launch)/rviz/setting.rviz"/>
+	
+
+</launch>
+

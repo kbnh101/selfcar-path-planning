@@ -1,0 +1,8 @@
+<launch>	
+	<node pkg="school_path" type="school_path_node" name="school_path">
+	</node>
+	<node pkg="selfcar_launch" type="tf_make" name="tf">
+	</node>
+	<include file="$(find local_path_control)/launch/control.launch"/>
+</launch>
+
