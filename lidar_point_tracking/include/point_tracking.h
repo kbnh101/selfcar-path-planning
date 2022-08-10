@@ -18,6 +18,8 @@
 
 #include<pcl_ros/point_cloud.h>
 
+#include<morai_msgs/CtrlCmd.h>
+
 class point_tracking
 {
     double max_lfd, min_lfd, back_x, back_y, vel_param, VL;
@@ -25,6 +27,8 @@ class point_tracking
     bool is_look_foward_point;
 public:
     point_tracking();
+
+    morai_msgs::CtrlCmd cmd_vel_;
 
     geometry_msgs::Twist cmd_vel;
 
@@ -38,4 +42,5 @@ public:
     ros::Subscriber lidar_waypoint;
     //publisher
     ros::Publisher cmd_pub;
+    ros::Publisher ctrl_cmd;
 };

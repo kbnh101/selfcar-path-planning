@@ -7,9 +7,11 @@ point_tracking::point_tracking()
 
     std::string lidar_point_topic;
     std::string twist_topic;
+    std::string sim_topic;
 
     pnh.param<std::string>("lidar_point_topic", lidar_point_topic, "center_point");
     pnh.param<std::string>("twist_topic", twist_topic, "cmd_vel");
+    pnh.param<std::string>("sim_topic", sim_topic, "ctrl_cmd");
 
     pnh.param<double>("VL", VL, 1.0);
     pnh.param<int>("velocity", velocity, 50);
@@ -21,6 +23,7 @@ point_tracking::point_tracking()
 
     //publish
     cmd_pub = nh.advertise<geometry_msgs::Twist>(twist_topic,10);
+    ctrl_cmd = nh.advertise<morai_msgs::CtrlCmd>(sim_topic,10);
 
     //subscriber
     lidar_waypoint = nh.subscribe(lidar_point_topic,10,&point_tracking::way_pt_sub,this);
@@ -104,5 +107,10 @@ void point_tracking::process()
     cmd_vel.angular.z = steering_angle(center_point);
     cmd_vel.linear.x = velocity;
 
+    cmd_vel_.longlCmdType = 2;
+    cmd_vel_.velocity = velocity;
+    cmd_vel_.steering = steering_angle(center_point);
+
     cmd_pub.publish(cmd_vel);
+    ctrl_cmd.publish(cmd_vel_);
 }
