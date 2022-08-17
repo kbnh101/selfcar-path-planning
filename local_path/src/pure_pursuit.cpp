@@ -6,8 +6,8 @@ pure_pursuit::pure_pursuit()
     ros::NodeHandle pnh("~");
     pnh.param("L", L, 1.0);
     pnh.param("VL",VL,1.6);
-    pnh.param("max_lfd", max_lfd, 10.0);
-    pnh.param("min_lfd", min_lfd, 2.0);
+    pnh.param("max_lfd", max_lfd, 7.0);
+    pnh.param("min_lfd", min_lfd, 4.5);
 
     marker_lfd = nh.advertise<visualization_msgs::MarkerArray>("/Look_Forward_Distance",10);
 }
@@ -24,7 +24,7 @@ void pure_pursuit::lfd_visualiztion(geometry_msgs::Pose index)
     node1.pose.orientation.w = 1.0;
     node1.pose.position.x = index.position.x; //노드의 x 좌표
     node1.pose.position.y = index.position.y; //노드의 y 좌표 // Points are green
-    node1.color.g = 0.5;
+    node1.color.r = 1.0;
     node1.color.a = 1.0;
     node1.scale.x = 1;
     node1.scale.y = 1;
@@ -50,7 +50,7 @@ double pure_pursuit::steering_angle(geometry_msgs::PoseWithCovariance pose, nav_
     double rotated_x = 0;
     double rotated_y = 0;
 
-    lfd = velocity/25.0;
+    lfd = velocity/2.0;
 
     if(lfd < min_lfd)
     {

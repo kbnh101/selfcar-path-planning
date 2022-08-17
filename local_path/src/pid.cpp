@@ -3,8 +3,8 @@
 pid::pid()
 {
     ros::NodeHandle pnh("~");
-    pnh.param("STEER_KP",STEER_KP,1.0);
-    pnh.param("STEER_KD",STEER_KD,0.0);
+    pnh.param("STEER_KP",STEER_KP,1.7);
+    pnh.param("STEER_KD",STEER_KD,1.2);
 }
 
 void pid::nomalize_angle(double &angle)

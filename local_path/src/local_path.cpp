@@ -4,7 +4,134 @@ local_path::local_path()
 {
     ros::NodeHandle nh;
     ros::NodeHandle pnh("~");
-    pnh.param("num",num1,30);
+    pnh.param("num",num1,25);
+
+    avoid = false;
+    dynamic = false;
+}
+
+void local_path::dynamic_object(sensor_msgs::PointCloud object)
+{
+    if(object.points.size() > 0)
+    {
+        double min_dist = 100.0;
+        int closest_index = 0;
+
+        for(int i = 0; i < path.poses.size(); i++)
+        {
+            for(int j = 0; j < object.points.size(); j++)
+            {
+                double path_x = path.poses.at(i).pose.position.x;
+                double path_y = path.poses.at(i).pose.position.y;
+
+                double rotated_x = cos(vehicle_yaw)*object.points.at(j).x - sin(vehicle_yaw)*object.points.at(j).y;
+                double rotated_y = sin(vehicle_yaw)*object.points.at(j).x + cos(vehicle_yaw)*object.points.at(j).y;
+
+                double obj_x = rotated_x + pose.pose.position.x;
+                double obj_y = rotated_y + pose.pose.position.y;
+
+                double dx = path_x - obj_x;
+                double dy = path_y - obj_y;
+
+                double dist = sqrt(dx*dx + dy*dy);
+
+                if(dist<min_dist)
+                {
+                    min_dist = dist;
+                    closest_index = j;
+                }
+            }
+        }
+        double x = object.points.at(closest_index).x;
+        double y = object.points.at(closest_index).y;
+
+        double obj_distance = sqrt(x*x + y*y);
+
+        if(min_dist < 4 && obj_distance < 10)
+            dynamic = true;
+        else
+            dynamic = false;
+    }
+}
+
+void local_path::static_object(sensor_msgs::PointCloud object, nav_msgs::Path path)
+{
+    if(object.points.size() > 0 && avoid == false)
+    {
+        double min_dist = 100.0;
+        int closest_index = 0;
+
+        for(int i = 0; i < path.poses.size(); i++)
+        {
+            for(int j = 0; j < object.points.size(); j++)
+            {
+                double path_x = path.poses.at(i).pose.position.x;
+                double path_y = path.poses.at(i).pose.position.y;
+
+                double rotated_x = cos(vehicle_yaw)*object.points.at(j).x - sin(vehicle_yaw)*object.points.at(j).y;
+                double rotated_y = sin(vehicle_yaw)*object.points.at(j).x + cos(vehicle_yaw)*object.points.at(j).y;
+
+                double obj_x = rotated_x + pose.pose.position.x;
+                double obj_y = rotated_y + pose.pose.position.y;
+
+                double dx = path_x - obj_x;
+                double dy = path_y - obj_y;
+
+                double dist = sqrt(dx*dx + dy*dy);
+
+                if(dist<min_dist)
+                {
+                    min_dist = dist;
+                    closest_index = j;
+                }
+            }
+        }
+        double x = object.points.at(closest_index).x;
+        double y = object.points.at(closest_index).y;
+
+        double obj_distance = sqrt(x*x + y*y);
+
+        if(min_dist < 2 && obj_distance < 13)
+            avoid = true;
+    }
+    else if(object.points.size() > 0 && avoid == true)
+    {
+        double min_dist = 100.0;
+        int closest_index = 0;
+
+        for(int i = 0; i < path.poses.size(); i++)
+        {
+            for(int j = 0; j < object.points.size(); j++)
+            {
+                double path_x = path.poses.at(i).pose.position.x;
+                double path_y = path.poses.at(i).pose.position.y;
+
+                double rotated_x = cos(vehicle_yaw)*object.points.at(j).x - sin(vehicle_yaw)*object.points.at(j).y;
+                double rotated_y = sin(vehicle_yaw)*object.points.at(j).x + cos(vehicle_yaw)*object.points.at(j).y;
+
+                double obj_x = rotated_x + pose.pose.position.x;
+                double obj_y = rotated_y + pose.pose.position.y;
+
+                double dx = path_x - obj_x;
+                double dy = path_y - obj_y;
+
+                double dist = sqrt(dx*dx + dy*dy);
+
+                if(dist<min_dist)
+                {
+                    min_dist = dist;
+                    closest_index = j;
+                }
+            }
+        }
+        double x = object.points.at(closest_index).x;
+        double y = object.points.at(closest_index).y;
+
+        double obj_distance = sqrt(x*x + y*y);
+
+        if(min_dist < 2 && obj_distance < 13)
+            avoid = false;
+    }
 }
 
 void local_path::path_tracking(nav_msgs::Path global_path)
@@ -14,7 +141,6 @@ void local_path::path_tracking(nav_msgs::Path global_path)
         double least_dist = 10;
         int temp_num = 0;
         int num = this->num;
-
         for(int i = 0; i<global_path.poses.size(); i++)
         {
             double dx = pose.pose.position.x - global_path.poses.at(i).pose.position.x;
@@ -27,16 +153,6 @@ void local_path::path_tracking(nav_msgs::Path global_path)
                 temp_num = i;
             }
         }
-
-        if(prev_temp_num < 0)
-        {
-            temp_num = temp_num;
-        }
-        else if(temp_num >= prev_temp_num + 20 || temp_num <= prev_temp_num - 20)
-        {
-            temp_num = prev_temp_num;
-        }
-
         tracking_path.header.stamp = ros::Time::now();
         tracking_path.header.frame_id = "map";
         tracking_path.poses.clear();
@@ -51,21 +167,28 @@ void local_path::path_tracking(nav_msgs::Path global_path)
         {
             num1 -= 1;
         }
-
         if(temp_num + num1 <= global_path.poses.size())
         {
             for(int i = temp_num; i< temp_num + num1; i++)
             {
-                temp_pose.pose.position.x = global_path.poses.at(i).pose.position.x;
-                temp_pose.pose.position.y = global_path.poses.at(i).pose.position.y;
-                temp_pose.pose.position.z = 0;
-                tracking_path.poses.push_back(temp_pose);
+                if(avoid == false)
+                {
+                    temp_pose.pose.position.x = global_path.poses.at(i).pose.position.x;
+                    temp_pose.pose.position.y = global_path.poses.at(i).pose.position.y;
+                    temp_pose.pose.position.z = 0;
+                    tracking_path.poses.push_back(temp_pose);
+                }
+                else if(avoid == true)
+                {
+                    temp_pose.pose.position.x = global_path.poses.at(i).pose.position.x + 4.5*sin(vehicle_yaw);
+                    temp_pose.pose.position.y = global_path.poses.at(i).pose.position.y - 4.5*cos(vehicle_yaw);
+                    temp_pose.pose.position.z = 0;
+                    tracking_path.poses.push_back(temp_pose);
+                }
             }
+            //static_object(object_point, tracking_path);
         }
-        else
-        {
-            flag = false;
-        }
+
         prev_temp_num = temp_num;
         path_pub.publish(tracking_path);
     }
@@ -98,30 +221,33 @@ void local_path::process()
     path_tracking(path);
     if(flag == true)
     {
-        for(int i = 0; i < prev_temp_num; i++)
-        {
-            path.poses.at(i).pose.position.x = 10000.0;
-            path.poses.at(i).pose.position.y = 10000.0;
-        }
         speed = speed;
+        cmd_vel_.longlCmdType = 2;
+        cmd_vel_.steering = steering_angle(pose, tracking_path, vehicle_yaw, speed);
         cmd_vel.angular.z = -1 * steering_angle(pose, tracking_path, vehicle_yaw, speed);
         if(is_look_foward_point == true)
         {
             cmd_vel.linear.x = speed;
+            cmd_vel_.velocity = speed;
+
+            dynamic_object(object_point);
+
+            if(dynamic == true)
+                cmd_vel_.velocity = 0;
         }
         else
         {
             cmd_vel.linear.x = 0;
+            cmd_vel_.velocity = 0;
         }
     }
     else if(flag==false)
     {
         cmd_vel.angular.z = 0;
         cmd_vel.linear.x = 0;
-        prev_temp_num = -1;
-	path = temp_path;
     }
     cmd_pub.publish(cmd_vel);
+    cmd_pub_.publish(cmd_vel_);
 }
 
 int main(int argc, char * argv[])

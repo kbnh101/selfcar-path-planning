@@ -34,8 +34,15 @@ public:
     bool state;
     int num, num1;
 
+    bool avoid;
+    bool dynamic;
+
+    morai_msgs::CtrlCmd cmd_vel_;
+
     //Function
     void local_map();
     void path_tracking(nav_msgs::Path global_path);
+    void static_object(sensor_msgs::PointCloud object, nav_msgs::Path path);
+    void dynamic_object(sensor_msgs::PointCloud object);
     void process();
 };

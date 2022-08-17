@@ -6,12 +6,15 @@
 		<!--<param name="UTM_OFFSET_X" type="double" value="362169.6526" />
 		<param name="UTM_OFFSET_Y" type="double" value="4054407.07" />-->
 		<!--ochang-->
-		<param name="UTM_OFFSET_X" type="double" value="361001.412425" />
-		<param name="UTM_OFFSET_Y" type="double" value="4065821.07176" />
+		<!--<param name="UTM_OFFSET_X" type="double" value="361001.412425" />
+		<param name="UTM_OFFSET_Y" type="double" value="4065821.07176" />-->
 		<!--k-city-->
 		<!--<param name="UTM_OFFSET_X" type="double" value="302533.174487" />
 		<param name="UTM_OFFSET_Y" type="double" value="4124215.34631" />-->
-		<param name="num" type="int" value="50" />
+		<!--sim-->
+		<param name="UTM_OFFSET_X" type="double" value="0.0" />
+		<param name="UTM_OFFSET_Y" type="double" value="0.0" />
+		<param name="num" type="int" value="30" />
 	</node>
 
 

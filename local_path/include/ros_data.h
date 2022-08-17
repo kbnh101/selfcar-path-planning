@@ -24,6 +24,8 @@
 #include<ackermann_msgs/AckermannDriveStamped.h>
 #include<ackermann_msgs/AckermannDrive.h>
 
+#include<sensor_msgs/PointCloud.h>
+
 #include<morai_msgs/CtrlCmd.h>
 
 class ros_data
@@ -51,9 +53,11 @@ public:
     geometry_msgs::Point prev_point;
     geometry_msgs::Twist cmd_vel;
 
+    sensor_msgs::PointCloud object_point;
 
     //Publish
     ros::Publisher cmd_pub;
+    ros::Publisher cmd_pub_;
     ros::Publisher path_pub;
     ros::Publisher pose_pub;
     ros::Publisher marker_vel;
@@ -66,6 +70,9 @@ public:
     ros::Subscriber speed_sub;
     ros::Subscriber map_sub;
     ros::Subscriber state_sub;
+    ros::Subscriber sim_pose_sub;
+    ros::Subscriber object_sub;
+
 
     //Callback
     void pathcallback(const nav_msgs::Path& msg);
@@ -74,6 +81,8 @@ public:
     void speed_callback(const std_msgs::Int32 &msg);
     void map_callback(const nav_msgs::OccupancyGrid &msg);
     void state_callback(const std_msgs::String &msg);
+    void sim_pose_callback(const nav_msgs::Odometry &msg);
+    void object_callback(const sensor_msgs::PointCloud &msg);
 };
 
 #endif // ROS_DATA_H
