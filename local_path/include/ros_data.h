@@ -18,6 +18,7 @@
 #include<geometry_msgs/Point.h>
 #include<geometry_msgs/PointStamped.h>
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
+#include<geometry_msgs/Polygon.h>
 
 #include<visualization_msgs/MarkerArray.h>
 
@@ -27,6 +28,7 @@
 #include<sensor_msgs/PointCloud.h>
 
 #include<morai_msgs/CtrlCmd.h>
+#include<data_transfer_msg/data_transfer.h>
 
 class ros_data
 {
@@ -52,8 +54,11 @@ public:
     geometry_msgs::PoseStamped temp_pose;
     geometry_msgs::Point prev_point;
     geometry_msgs::Twist cmd_vel;
+    geometry_msgs::Polygon node_list;
 
     sensor_msgs::PointCloud object_point;
+
+    data_transfer_msg::data_transfer camera_data;
 
     //Publish
     ros::Publisher cmd_pub;
@@ -72,7 +77,8 @@ public:
     ros::Subscriber state_sub;
     ros::Subscriber sim_pose_sub;
     ros::Subscriber object_sub;
-
+    ros::Subscriber camera_sub;
+    ros::Subscriber node_sub;
 
     //Callback
     void pathcallback(const nav_msgs::Path& msg);
@@ -83,6 +89,8 @@ public:
     void state_callback(const std_msgs::String &msg);
     void sim_pose_callback(const nav_msgs::Odometry &msg);
     void object_callback(const sensor_msgs::PointCloud &msg);
+    void camera_callback(const data_transfer_msg::data_transfer &msg);
+    void node_callback(const geometry_msgs::Polygon &msg);
 };
 
 #endif // ROS_DATA_H

@@ -23,6 +23,8 @@ ros_data::ros_data()
     state_sub = nh.subscribe("state",10,&ros_data::state_callback,this);
     sim_pose_sub = nh.subscribe("odom",10,&ros_data::sim_pose_callback,this);
     object_sub = nh.subscribe("center_points",10,&ros_data::object_callback,this);
+    camera_sub = nh.subscribe("/Data_Transger",10,&ros_data::camera_callback,this);
+    node_sub = nh.subscribe("node_pose",10,&ros_data::node_callback,this);
 }
 
 void ros_data::sim_pose_callback(const nav_msgs::Odometry &msg)
@@ -51,6 +53,11 @@ void ros_data::sim_pose_callback(const nav_msgs::Odometry &msg)
 void ros_data::trajectorycallback(const nav_msgs::Path& msg)
 {
     trajectory_path = msg;
+}
+
+void ros_data::node_callback(const geometry_msgs::Polygon& msg)
+{
+    node_list = msg;
 }
 
 void ros_data::map_callback(const nav_msgs::OccupancyGrid &msg)
@@ -101,4 +108,9 @@ void ros_data::posecallback(const geometry_msgs::PoseWithCovariance& msg)
 void ros_data::object_callback(const sensor_msgs::PointCloud &msg)
 {
     object_point = msg;
+}
+
+void ros_data::camera_callback(const data_transfer_msg::data_transfer &msg)
+{
+    camera_data = msg;
 }

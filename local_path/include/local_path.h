@@ -25,6 +25,7 @@
 #include "pure_pursuit.h"
 #include "ros_data.h"
 
+#include<data_transfer_msg/data_transfer.h>
 
 class local_path : public pure_pursuit, ros_data{
 public:
@@ -44,5 +45,6 @@ public:
     void path_tracking(nav_msgs::Path global_path);
     void static_object(sensor_msgs::PointCloud object, nav_msgs::Path path);
     void dynamic_object(sensor_msgs::PointCloud object);
+    double node_distance();
     void process();
 };

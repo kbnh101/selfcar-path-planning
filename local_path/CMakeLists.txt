@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   morai_msgs
+  data_transfer_msg
 )
 
 catkin_package(

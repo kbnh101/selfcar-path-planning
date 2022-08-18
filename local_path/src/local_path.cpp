@@ -134,6 +134,43 @@ void local_path::static_object(sensor_msgs::PointCloud object, nav_msgs::Path pa
     }
 }
 
+double local_path::node_distance()
+{
+    if(node_list.points.size() > 0)
+    {
+        std::vector<geometry_msgs::Point32> temp_point;
+
+        temp_point.push_back(node_list.points.at(2));//node3
+        temp_point.push_back(node_list.points.at(8));//node9
+        temp_point.push_back(node_list.points.at(10));//node11
+        temp_point.push_back(node_list.points.at(29));//node30
+        //traffic light node pushback
+
+        double index = 0;
+        double min_dis = 50;
+
+        for(int i = 0; i<temp_point.size(); i++)
+        {
+            double dx = temp_point.at(i).x - temp_pose.pose.position.x;
+            double dy = temp_point.at(i).y - temp_pose.pose.position.y;
+
+            double dis = sqrt(dx*dx + dy*dy);
+
+            if(min_dis > dis)
+            {
+                min_dis = dis;
+                index = i;
+            }
+        } // 신호등 노드 중에 현재 자차량 위치와 가장 가까운 점 탐색
+        double tx = temp_point.at(index).x - temp_pose.pose.position.x;
+        double ty = temp_point.at(index).y - temp_pose.pose.position.y;
+
+        double dist = sqrt(tx*tx + ty*ty);
+
+        return dist;// 신호등 노드와의 거리 return
+    }
+}
+
 void local_path::path_tracking(nav_msgs::Path global_path)
 {
     if(flag == true)
@@ -180,13 +217,13 @@ void local_path::path_tracking(nav_msgs::Path global_path)
                 }
                 else if(avoid == true)
                 {
-                    temp_pose.pose.position.x = global_path.poses.at(i).pose.position.x + 4.5*sin(vehicle_yaw);
-                    temp_pose.pose.position.y = global_path.poses.at(i).pose.position.y - 4.5*cos(vehicle_yaw);
+                    temp_pose.pose.position.x = global_path.poses.at(i).pose.position.x - 4.5*sin(vehicle_yaw);
+                    temp_pose.pose.position.y = global_path.poses.at(i).pose.position.y + 4.5*cos(vehicle_yaw);
                     temp_pose.pose.position.z = 0;
                     tracking_path.poses.push_back(temp_pose);
                 }
             }
-            //static_object(object_point, tracking_path);
+
         }
 
         prev_temp_num = temp_num;
@@ -225,15 +262,40 @@ void local_path::process()
         cmd_vel_.longlCmdType = 2;
         cmd_vel_.steering = steering_angle(pose, tracking_path, vehicle_yaw, speed);
         cmd_vel.angular.z = -1 * steering_angle(pose, tracking_path, vehicle_yaw, speed);
+        if(camera_data.traffic_light == "RED")
+        {
+            std::cout<<"oh good"<<std::endl;
+        }
+
         if(is_look_foward_point == true)
         {
             cmd_vel.linear.x = speed;
             cmd_vel_.velocity = speed;
 
+            if(camera_data.traffic_light == "YELLOW" )
+            {
+                cmd_vel.linear.x = 5;
+                cmd_vel_.velocity = 5;
+            }
+            else if(camera_data.traffic_light == "RED" && node_distance() <10 && node_distance()>=5)
+            {
+                cmd_vel.linear.x = 5;
+                cmd_vel_.velocity = 5;
+            }
+            else if(camera_data.traffic_light == "RED")
+            {
+                cmd_vel.linear.x = 0;
+                cmd_vel_.velocity = 0;
+            }
+
             dynamic_object(object_point);
+            static_object(object_point, tracking_path);
 
             if(dynamic == true)
+            {
                 cmd_vel_.velocity = 0;
+                cmd_vel.linear.x = 0;
+            }
         }
         else
         {
@@ -245,6 +307,8 @@ void local_path::process()
     {
         cmd_vel.angular.z = 0;
         cmd_vel.linear.x = 0;
+        cmd_vel_.velocity = 0;
+        cmd_vel_.steering = 0;
     }
     cmd_pub.publish(cmd_vel);
     cmd_pub_.publish(cmd_vel_);
