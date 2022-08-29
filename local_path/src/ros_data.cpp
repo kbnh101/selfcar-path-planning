@@ -25,6 +25,7 @@ ros_data::ros_data()
     object_sub = nh.subscribe("center_points",10,&ros_data::object_callback,this);
     camera_sub = nh.subscribe("/Data_Transger",10,&ros_data::camera_callback,this);
     node_sub = nh.subscribe("node_pose",10,&ros_data::node_callback,this);
+    parking_path_sub = nh.subscribe("parking_path",10,&ros_data::parking_path_callback,this);
 }
 
 void ros_data::sim_pose_callback(const nav_msgs::Odometry &msg)
@@ -70,6 +71,11 @@ void ros_data::pathcallback(const nav_msgs::Path& msg)
     path = msg;
     temp_path = msg;
     flag = true;
+}
+
+void ros_data::parking_path_callback(const nav_msgs::Path &msg)
+{
+    parking_path = msg;
 }
 
 void ros_data::speed_callback(const std_msgs::Int32 &msg)

@@ -102,6 +102,7 @@ public:
     void TargetPointtCallback(const geometry_msgs::PoseStamped& msg);
     void StartPointCallback(const geometry_msgs::PoseWithCovarianceStamped& msg);
     void posecallback(const geometry_msgs::PoseWithCovariance& msg);
+    void sim_posecallback(const nav_msgs::Odometry &msg);
 
     //Publish
     ros::Publisher path_pub;
@@ -116,6 +117,7 @@ public:
     ros::Subscriber targetPoint_sub;
     ros::Subscriber pose_sub;
     ros::Subscriber path_sub;
+    ros::Subscriber sim_pose_sub;
 };
 
 #endif // DIJKSTRA_H

@@ -5,14 +5,15 @@ dijkstra::dijkstra()
     ros::NodeHandle nh;
     ros::NodeHandle pnh;
 
-    pnh.param("UTM_OFFSET_X",OFFSET_X,361001.412425);
-    pnh.param("UTM_OFFSET_Y",OFFSET_Y,4065821.07176);
+    pnh.param("UTM_OFFSET_X",OFFSET_X,302459.942);
+    pnh.param("UTM_OFFSET_Y",OFFSET_Y,4122635.537);
 
     //subscribe
     map_sub = nh.subscribe("map",10,&dijkstra::MapCallback,this);
     startPoint_sub = nh.subscribe("initialpose", 10, &dijkstra::StartPointCallback,this);
     targetPoint_sub = nh.subscribe("move_base_simple/goal", 10, &dijkstra::TargetPointtCallback,this);
     pose_sub = nh.subscribe("/Perception/Localization/LocalPose",10,&dijkstra::posecallback,this);
+    sim_pose_sub = nh.subscribe("/odom",10, &dijkstra::sim_posecallback,this);
 
     //publish
     path_pub = nh.advertise<nav_msgs::Path>("/global_path",10);
@@ -27,6 +28,13 @@ void dijkstra::posecallback(const geometry_msgs::PoseWithCovariance& msg)
     pose = msg.pose;
     pose.position.x = msg.pose.position.x - OFFSET_X;
     pose.position.y = msg.pose.position.y - OFFSET_Y;
+}
+
+void dijkstra::sim_posecallback(const nav_msgs::Odometry &msg)
+{
+    pose = msg.pose.pose;
+    pose.position.x = msg.pose.pose.position.x;
+    pose.position.y = msg.pose.pose.position.y;
 }
 
 void dijkstra::MapCallback(const nav_msgs::OccupancyGrid& msg)
@@ -176,7 +184,7 @@ void dijkstra::find_path(cv::Point2d start_point, cv::Point2d dst_point)
             }
         }
     }
-    end_node = node.at(31).id;
+    end_node = node.at(16).id;
     exend = Wend_num;
 
     for (int i = 0; i < edge.size(); i++)
@@ -396,8 +404,8 @@ int main(int argc, char * argv[])
     path.flag = false;
     path.Done = false;
 
-    ifstream file_edge("/home/selfcar/selfcar_ws/src/global_path/path_data/ochang/ctrack_urban_edge_revise.csv");
-    ifstream file_node("/home/selfcar/selfcar_ws/src/global_path/path_data/ochang/ctrack_urban_node_revise.csv");
+    ifstream file_edge("/home/a/morai_ws/src/morai/global_path/path_data/kcity/22.08.03_kcity_test_edge.csv");
+    ifstream file_node("/home/a/morai_ws/src/morai/global_path/path_data/kcity/22.08.03_kcity_test_node.csv");
 
     path.node_parse(file_node);
     path.edge_parse(file_edge);

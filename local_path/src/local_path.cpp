@@ -255,12 +255,20 @@ void local_path::local_map()
 
 void local_path::process()
 {
-    path_tracking(path);
+    if(state == "diagonal_parking")
+    {
+        path_tracking(parking_path);
+    }
+    else
+    {
+        path_tracking(path);
+    }
     if(flag == true)
     {
         speed = speed;
         cmd_vel_.longlCmdType = 2;
         cmd_vel_.steering = steering_angle(pose, tracking_path, vehicle_yaw, speed);
+        cmd_vel_.brake = 0;
         cmd_vel.angular.z = -1 * steering_angle(pose, tracking_path, vehicle_yaw, speed);
         if(camera_data.traffic_light == "RED")
         {
@@ -288,8 +296,12 @@ void local_path::process()
                 cmd_vel_.velocity = 0;
             }
 
-            dynamic_object(object_point);
-            static_object(object_point, tracking_path);
+            if(state == "static")
+            {
+                dynamic_object(object_point);
+                static_object(object_point, tracking_path);
+
+            }
 
             if(dynamic == true)
             {
@@ -301,6 +313,7 @@ void local_path::process()
         {
             cmd_vel.linear.x = 0;
             cmd_vel_.velocity = 0;
+            flag = false;
         }
     }
     else if(flag==false)
@@ -309,6 +322,7 @@ void local_path::process()
         cmd_vel.linear.x = 0;
         cmd_vel_.velocity = 0;
         cmd_vel_.steering = 0;
+        cmd_vel_.brake = 1;
     }
     cmd_pub.publish(cmd_vel);
     cmd_pub_.publish(cmd_vel_);

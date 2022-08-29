@@ -7,7 +7,7 @@ pure_pursuit::pure_pursuit()
     pnh.param("L", L, 1.0);
     pnh.param("VL",VL,1.6);
     pnh.param("max_lfd", max_lfd, 7.0);
-    pnh.param("min_lfd", min_lfd, 4.5);
+    pnh.param("min_lfd", min_lfd, 1.5);
 
     marker_lfd = nh.advertise<visualization_msgs::MarkerArray>("/Look_Forward_Distance",10);
 }

@@ -32,7 +32,6 @@ public:
     local_path();
     double rate = 10;
     int prev_temp_num;
-    bool state;
     int num, num1;
 
     bool avoid;

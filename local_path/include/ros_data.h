@@ -46,6 +46,7 @@ public:
     nav_msgs::Path temp_path;
     nav_msgs::Path trajectory_path;
     nav_msgs::Path tracking_path;
+    nav_msgs::Path parking_path;
     nav_msgs::Odometry odometry;
     nav_msgs::OccupancyGrid small_map;
     nav_msgs::OccupancyGrid global_map;
@@ -79,6 +80,7 @@ public:
     ros::Subscriber object_sub;
     ros::Subscriber camera_sub;
     ros::Subscriber node_sub;
+    ros::Subscriber parking_path_sub;
 
     //Callback
     void pathcallback(const nav_msgs::Path& msg);
@@ -91,6 +93,7 @@ public:
     void object_callback(const sensor_msgs::PointCloud &msg);
     void camera_callback(const data_transfer_msg::data_transfer &msg);
     void node_callback(const geometry_msgs::Polygon &msg);
+    void parking_path_callback(const nav_msgs::Path &msg);
 };
 
 #endif // ROS_DATA_H
