@@ -235,22 +235,47 @@ void local_path::path_tracking(nav_msgs::Path global_path)
     }
 }
 
+bool local_path::parking_stop(geometry_msgs::Polygon stop)
+{
+    double min_dist = 100;
+    int index = 0;
+
+    for(int i = 0; i < stop.points.size(); i++)
+    {
+        double dx = pose.pose.position.x - stop.points.at(i).x;
+        double dy = pose.pose.position.y - stop.points.at(i).y;
+
+        double dist = sqrt(dx*dx + dy*dy);
+
+        if(min_dist > dist)
+        {
+            index = i;
+            min_dist = dist;
+        }
+    }
+
+    if(min_dist <= 0.5)
+        return true;
+    else
+        return false;
+}
+
 void local_path::local_map()
 {
-    double x = 40;
-    double y = 40;
-    small_map.header.stamp = ros::Time::now();
-    small_map.header.frame_id = "local";
-    small_map.info.map_load_time = ros::Time::now();
-    small_map.info.resolution = 1;
-    small_map.info.width = x;
-    small_map.info.height = y;
-    small_map.info.origin.position.x = -20;
-    small_map.info.origin.position.y = -20;
-    small_map.info.origin.orientation.w = 1;
-    small_map.data.assign(x*y,0);
+//    double x = 40;
+//    double y = 40;
+//    small_map.header.stamp = ros::Time::now();
+//    small_map.header.frame_id = "local";
+//    small_map.info.map_load_time = ros::Time::now();
+//    small_map.info.resolution = 1;
+//    small_map.info.width = x;
+//    small_map.info.height = y;
+//    small_map.info.origin.position.x = -20;
+//    small_map.info.origin.position.y = -20;
+//    small_map.info.origin.orientation.w = 1;
+//    small_map.data.assign(x*y,0);
 
-    small_map_pub.publish(small_map);
+//    small_map_pub.publish(small_map);
 }
 
 void local_path::process()
@@ -265,10 +290,11 @@ void local_path::process()
     }
     if(flag == true)
     {
-        speed = speed;
+        //simulator
         cmd_vel_.longlCmdType = 2;
         cmd_vel_.steering = steering_angle(pose, tracking_path, vehicle_yaw, speed);
         cmd_vel_.brake = 0;
+        //fucking erp42
         cmd_vel.angular.z = -1 * steering_angle(pose, tracking_path, vehicle_yaw, speed);
         if(camera_data.traffic_light == "RED")
         {
@@ -279,7 +305,7 @@ void local_path::process()
         {
             cmd_vel.linear.x = speed;
             cmd_vel_.velocity = speed;
-
+            ///////////////////traffic light///////////////////
             if(camera_data.traffic_light == "YELLOW" )
             {
                 cmd_vel.linear.x = 5;
@@ -295,18 +321,33 @@ void local_path::process()
                 cmd_vel.linear.x = 0;
                 cmd_vel_.velocity = 0;
             }
-
+            ///////////////////avoid dynamic & static object///////////////////
             if(state == "static")
             {
-                dynamic_object(object_point);
                 static_object(object_point, tracking_path);
-
             }
-
+            else if(state == "dynamic")
+            {
+                dynamic_object(object_point);
+            }
+            ///////////////////stop dynamic object///////////////////
             if(dynamic == true)
             {
                 cmd_vel_.velocity = 0;
                 cmd_vel.linear.x = 0;
+            }
+            ///////////////////parking///////////////////
+            if(parking_stop(parking_stop_list) == true && parking_state == false)
+            {
+                cmd_vel_.velocity = 0;
+                cmd_vel_.brake = 1;
+                cmd_vel.linear.x = 0;
+
+                cmd_pub_.publish(cmd_vel_);
+                cmd_pub.publish(cmd_vel);
+
+                ros::Duration(5.0).sleep();
+                parking_state = true;
             }
         }
         else

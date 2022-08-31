@@ -10,6 +10,7 @@ parking_path::parking_path()
 
     //Publish
     parking_path_pub = nh.advertise<nav_msgs::Path>("parking_path",10);
+    stop_area_pub = nh.advertise<geometry_msgs::Polygon>("fucking_stop",10);
 
     //Subscriber
     object_sub = nh.subscribe("center_points",10,&parking_path::object_callback,this);
@@ -134,7 +135,17 @@ bool parking_path::find_rightpath(nav_msgs::Path path, sensor_msgs::PointCloud o
 }
 
 void parking_path::process()
-{
+{   
+    geometry_msgs::Point32 temp_point;
+
+    for(int i = 0; i < temp_node.poses.size(); i++)
+    {
+        temp_point.x = temp_node.poses.at(i).pose.position.x;
+        temp_point.y = temp_node.poses.at(i).pose.position.y;
+
+        stop_area.points.push_back(temp_point);
+    }
+
     if(state == "diagonal_parking")
     {
         int index = 0;
@@ -171,6 +182,8 @@ void parking_path::process()
             }
         }
         parking_path_pub.publish(path_withcost.at(index).path);
+        stop_area_pub.publish(stop_area);
+        stop_area.points.clear();
     }
     else if(state == "parallel_parking")
     {
@@ -186,6 +199,8 @@ void parking_path::process()
     else
     {
         nav_msgs::Path default_path;
+        default_path.header.stamp = ros::Time::now();
+        default_path.header.frame_id = "map";
         parking_path_pub.publish(default_path);
     }
 }

@@ -19,6 +19,7 @@
 
 #include<geometry_msgs/PoseStamped.h>
 #include<geometry_msgs/PoseWithCovariance.h>
+#include<geometry_msgs/Polygon.h>
 
 struct path_data
 {
@@ -49,11 +50,14 @@ public:
     nav_msgs::Path diagonal_path6;
     nav_msgs::Path parallel_path1;
     nav_msgs::Path parallel_path2;
+    nav_msgs::Path temp_node;
 
     geometry_msgs::PoseWithCovariance pose;
+    geometry_msgs::Polygon stop_area;
 
     //Publish
     ros::Publisher parking_path_pub;
+    ros::Publisher stop_area_pub;
 
     //Subscriber
     ros::Subscriber object_sub;

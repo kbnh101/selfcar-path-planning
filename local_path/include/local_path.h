@@ -45,5 +45,6 @@ public:
     void static_object(sensor_msgs::PointCloud object, nav_msgs::Path path);
     void dynamic_object(sensor_msgs::PointCloud object);
     double node_distance();
+    bool parking_stop(geometry_msgs::Polygon stop);
     void process();
 };

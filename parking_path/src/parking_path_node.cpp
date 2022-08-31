@@ -16,6 +16,7 @@ int main(int argc, char * argv[])
     std::ifstream diagonal_path6;
     std::ifstream parallel_path1;
     std::ifstream parallel_path2;
+    std::ifstream stop_node;
 
     diagonal_path1.open(location + "diagonal_path1.txt");
     diagonal_path2.open(location + "diagonal_path2.txt");
@@ -25,6 +26,7 @@ int main(int argc, char * argv[])
     diagonal_path6.open(location + "diagonal_path6.txt");
     parallel_path1.open(location + "parallel_path1.txt");
     parallel_path2.open(location + "parallel_path2.txt");
+    stop_node.open(location + "stop_node.txt");
 
     parking_path path;
 
@@ -36,6 +38,8 @@ int main(int argc, char * argv[])
     path.parsing_data(diagonal_path6, path.diagonal_path6);
     path.parsing_data(parallel_path1, path.parallel_path1);
     path.parsing_data(parallel_path2, path.parallel_path2);
+    path.parsing_data(stop_node,path.temp_node);
+
 
     ros::Rate loop_rate(10);
     while(ros::ok())

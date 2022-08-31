@@ -26,6 +26,9 @@ ros_data::ros_data()
     camera_sub = nh.subscribe("/Data_Transger",10,&ros_data::camera_callback,this);
     node_sub = nh.subscribe("node_pose",10,&ros_data::node_callback,this);
     parking_path_sub = nh.subscribe("parking_path",10,&ros_data::parking_path_callback,this);
+    parking_stop_sub = nh.subscribe("fucking_stop",10,&ros_data::parking_stop_callback,this);
+
+    parking_state = false;
 }
 
 void ros_data::sim_pose_callback(const nav_msgs::Odometry &msg)
@@ -56,7 +59,7 @@ void ros_data::trajectorycallback(const nav_msgs::Path& msg)
     trajectory_path = msg;
 }
 
-void ros_data::node_callback(const geometry_msgs::Polygon& msg)
+void ros_data::node_callback(const geometry_msgs::Polygon &msg)
 {
     node_list = msg;
 }
@@ -78,6 +81,11 @@ void ros_data::parking_path_callback(const nav_msgs::Path &msg)
     parking_path = msg;
 }
 
+void ros_data::parking_stop_callback(const geometry_msgs::Polygon &msg)
+{
+    parking_stop_list = msg;
+}
+
 void ros_data::speed_callback(const std_msgs::Int32 &msg)
 {
     speed = msg.data;
@@ -86,6 +94,14 @@ void ros_data::speed_callback(const std_msgs::Int32 &msg)
 void ros_data::state_callback(const std_msgs::String &msg)
 {
     state = msg.data;
+    if(parking_state == true && state == "diagonal_parking" || state == "parallel_parking")
+    {
+        state = "no";
+    }
+    else if(state != "digonal_parking" || state != "parallel_parking")
+    {
+        parking_state = false;
+    }
 }
 
 void ros_data::posecallback(const geometry_msgs::PoseWithCovariance& msg)

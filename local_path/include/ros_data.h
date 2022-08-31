@@ -38,7 +38,7 @@ public:
     int speed;
     double vehicle_yaw, vehicle_roll, vehicle_pitch;
     double UTM_OFFSET_X, UTM_OFFSET_Y;
-    bool flag;
+    bool flag, parking_state;
 
     std::string state;
 
@@ -56,6 +56,7 @@ public:
     geometry_msgs::Point prev_point;
     geometry_msgs::Twist cmd_vel;
     geometry_msgs::Polygon node_list;
+    geometry_msgs::Polygon parking_stop_list;
 
     sensor_msgs::PointCloud object_point;
 
@@ -81,6 +82,7 @@ public:
     ros::Subscriber camera_sub;
     ros::Subscriber node_sub;
     ros::Subscriber parking_path_sub;
+    ros::Subscriber parking_stop_sub;
 
     //Callback
     void pathcallback(const nav_msgs::Path& msg);
@@ -94,6 +96,7 @@ public:
     void camera_callback(const data_transfer_msg::data_transfer &msg);
     void node_callback(const geometry_msgs::Polygon &msg);
     void parking_path_callback(const nav_msgs::Path &msg);
+    void parking_stop_callback(const geometry_msgs::Polygon &msg);
 };
 
 #endif // ROS_DATA_H
