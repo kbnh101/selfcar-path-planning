@@ -14,7 +14,12 @@
 		<!--sim-->
 		<param name="UTM_OFFSET_X" type="double" value="0.0" />
 		<param name="UTM_OFFSET_Y" type="double" value="0.0" />
-		<param name="num" type="int" value="30" />
+		<param name="num" type="int" value="35" />
+		<param name="path_param" type="double" value="3.5" />
+		<param name="avoid_mindist" type="double" value="1.3" />
+		<param name="avoid_objdist" type="double" value="10.0" />
+		<param name="dynamic_mindist" type="double" value="1.7" />
+		<param name="dynamic_objdist" type="double" value="10.0" />
 	</node>
 
 

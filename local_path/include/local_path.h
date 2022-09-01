@@ -32,7 +32,8 @@ public:
     local_path();
     double rate = 10;
     int prev_temp_num;
-    int num, num1;
+    int num;
+    double avoid_path_param, avoid_mindist, avoid_objdist, dynamic_mindist, dynamic_objdist;
 
     bool avoid;
     bool dynamic;

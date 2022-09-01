@@ -4,7 +4,12 @@ local_path::local_path()
 {
     ros::NodeHandle nh;
     ros::NodeHandle pnh("~");
-    pnh.param("num",num1,25);
+    pnh.param("num",num,25);
+    pnh.param("path_param",avoid_path_param, 4.5);
+    pnh.param("avoid_mindist",avoid_mindist, 1.0);
+    pnh.param("avoid_objdist",avoid_objdist, 10.0);
+    pnh.param("dynamic_mindist",dynamic_mindist, 1.0);
+    pnh.param("dynamic_objdist",dynamic_objdist, 10.0);
 
     avoid = false;
     dynamic = false;
@@ -47,7 +52,7 @@ void local_path::dynamic_object(sensor_msgs::PointCloud object)
 
         double obj_distance = sqrt(x*x + y*y);
 
-        if(min_dist < 4 && obj_distance < 10)
+        if(min_dist < dynamic_mindist && obj_distance < dynamic_objdist)
             dynamic = true;
         else
             dynamic = false;
@@ -91,7 +96,8 @@ void local_path::static_object(sensor_msgs::PointCloud object, nav_msgs::Path pa
 
         double obj_distance = sqrt(x*x + y*y);
 
-        if(min_dist < 2 && obj_distance < 13)
+        if(min_dist < avoid_mindist && obj_distance < avoid_objdist)
+            // 똥쟁이 호호야
             avoid = true;
     }
     else if(object.points.size() > 0 && avoid == true)
@@ -129,7 +135,7 @@ void local_path::static_object(sensor_msgs::PointCloud object, nav_msgs::Path pa
 
         double obj_distance = sqrt(x*x + y*y);
 
-        if(min_dist < 2 && obj_distance < 13)
+        if(min_dist < avoid_mindist && obj_distance < avoid_objdist)
             avoid = false;
     }
 }
@@ -177,7 +183,6 @@ void local_path::path_tracking(nav_msgs::Path global_path)
     {
         double least_dist = 10;
         int temp_num = 0;
-        int num = this->num;
         for(int i = 0; i<global_path.poses.size(); i++)
         {
             double dx = pose.pose.position.x - global_path.poses.at(i).pose.position.x;
@@ -198,15 +203,15 @@ void local_path::path_tracking(nav_msgs::Path global_path)
         temp_pose.header.stamp = ros::Time::now();
         temp_pose.header.frame_id = "map";
 
-        int local_path_size = temp_num + num1;
+        int local_path_size = temp_num + num;
 
         if(local_path_size >= global_path.poses.size()-1)
         {
-            num1 -= 1;
+            num -= 1;
         }
-        if(temp_num + num1 <= global_path.poses.size())
+        if(temp_num + num <= global_path.poses.size())
         {
-            for(int i = temp_num; i< temp_num + num1; i++)
+            for(int i = temp_num; i< temp_num + num; i++)
             {
                 if(avoid == false)
                 {
@@ -217,8 +222,8 @@ void local_path::path_tracking(nav_msgs::Path global_path)
                 }
                 else if(avoid == true)
                 {
-                    temp_pose.pose.position.x = global_path.poses.at(i).pose.position.x - 4.5*sin(vehicle_yaw);
-                    temp_pose.pose.position.y = global_path.poses.at(i).pose.position.y + 4.5*cos(vehicle_yaw);
+                    temp_pose.pose.position.x = global_path.poses.at(i).pose.position.x + avoid_path_param*sin(vehicle_yaw);
+                    temp_pose.pose.position.y = global_path.poses.at(i).pose.position.y - avoid_path_param*cos(vehicle_yaw);
                     temp_pose.pose.position.z = 0;
                     tracking_path.poses.push_back(temp_pose);
                 }
@@ -334,6 +339,7 @@ void local_path::process()
             if(dynamic == true)
             {
                 cmd_vel_.velocity = 0;
+                cmd_vel_.brake = 1;
                 cmd_vel.linear.x = 0;
             }
             ///////////////////parking///////////////////
@@ -348,6 +354,7 @@ void local_path::process()
 
                 ros::Duration(5.0).sleep();
                 parking_state = true;
+                num = 30;
             }
         }
         else
