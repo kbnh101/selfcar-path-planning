@@ -97,7 +97,6 @@ void local_path::static_object(sensor_msgs::PointCloud object, nav_msgs::Path pa
         double obj_distance = sqrt(x*x + y*y);
 
         if(min_dist < avoid_mindist && obj_distance < avoid_objdist)
-            // 똥쟁이 호호야
             avoid = true;
     }
     else if(object.points.size() > 0 && avoid == true)
