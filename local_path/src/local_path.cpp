@@ -4,12 +4,12 @@ local_path::local_path()
 {
     ros::NodeHandle nh;
     ros::NodeHandle pnh("~");
-    pnh.param("num",num,25);
-    pnh.param("path_param",avoid_path_param, 4.5);
-    pnh.param("avoid_mindist",avoid_mindist, 1.0);
-    pnh.param("avoid_objdist",avoid_objdist, 10.0);
-    pnh.param("dynamic_mindist",dynamic_mindist, 1.0);
-    pnh.param("dynamic_objdist",dynamic_objdist, 10.0);
+    pnh.param<int>("num",num,25);
+    pnh.param<double>("path_param",avoid_path_param, 4.5);
+    pnh.param<double>("avoid_mindist",avoid_mindist, 1.0);
+    pnh.param<double>("avoid_objdist",avoid_objdist, 10.0);
+    pnh.param<double>("dynamic_mindist",dynamic_mindist, 1.0);
+    pnh.param<double>("dynamic_objdist",dynamic_objdist, 10.0);
 
     avoid = false;
     dynamic = false;

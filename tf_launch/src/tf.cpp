@@ -22,18 +22,18 @@ void pose_callback(const geometry_msgs::PoseWithCovariance &msg)
 
     map_odom.sendTransform(
       tf::StampedTransform(
-        tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(pose.pose.position.x, pose.pose.position.y, 0.0)),
+        tf::Transform(tf::Quaternion(pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z, pose.pose.orientation.w), tf::Vector3(pose.pose.position.x, pose.pose.position.y, 0.0)),
         ros::Time::now(),"map", "odom"));
 
    odom_lidar.sendTransform(
      tf::StampedTransform(
-       tf::Transform(tf::Quaternion(0, 0, vehicle_yaw, 1), tf::Vector3(0.7, 0.0, 0.3)),
-       ros::Time::now(),"odom", "velodyne"));
+       tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.7, 0.0, 0.3)),
+       ros::Time::now(),"odom", "lidar"));
 
-   odom_local.sendTransform(
-     tf::StampedTransform(
-       tf::Transform(tf::Quaternion(0, 0, vehicle_yaw, 1), tf::Vector3(0.0, 0.0, 0.0)),
-       ros::Time::now(),"odom", "local"));
+//   odom_local.sendTransform(
+//     tf::StampedTransform(
+//       tf::Transform(tf::Quaternion(0, 0, vehicle_yaw, 1), tf::Vector3(0.0, 0.0, 0.0)),
+//       ros::Time::now(),"odom", "local"));
 
 }
 

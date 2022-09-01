@@ -1,26 +1,31 @@
 <launch>
-	<node pkg="local_path_control" type="local_path_control" name="local_path"  output="screen" >
-		<param name="max_lfd" type="double" value="10.0" />
-		<param name="min_lfd" type="double" value="2.0" />
-		<!--school-->
-		<!--<param name="UTM_OFFSET_X" type="double" value="362169.6526" />
-		<param name="UTM_OFFSET_Y" type="double" value="4054407.07" />-->
-		<!--ochang-->
-		<!--<param name="UTM_OFFSET_X" type="double" value="361001.412425" />
-		<param name="UTM_OFFSET_Y" type="double" value="4065821.07176" />-->
-		<!--k-city-->
-		<!--<param name="UTM_OFFSET_X" type="double" value="302533.174487" />
-		<param name="UTM_OFFSET_Y" type="double" value="4124215.34631" />-->
-		<!--sim-->
-		<param name="UTM_OFFSET_X" type="double" value="0.0" />
-		<param name="UTM_OFFSET_Y" type="double" value="0.0" />
-		<param name="num" type="int" value="35" />
-		<param name="path_param" type="double" value="3.5" />
-		<param name="avoid_mindist" type="double" value="1.3" />
-		<param name="avoid_objdist" type="double" value="10.0" />
-		<param name="dynamic_mindist" type="double" value="1.7" />
-		<param name="dynamic_objdist" type="double" value="10.0" />
-	</node>
 
+ <node pkg="local_path_control" type="local_path_control" name="local_path" output="screen">
+    <param name="max_lfd" value="10.0" type="double" />
+    <param name="min_lfd" value="1.4" type="double" />
+    <param name="num" value="30" type="int" />
+    <param name="path_param" value="3.5" type="double" />
+    <param name="avoid_mindist" value="1.5" type="double" />
+    <param name="avoid_objdist" value="13.0" type="double" />
+    <param name="dynamic_mindist" value="1.5" type="double" />
+    <param name="dynamic_objdist" value="12.0" type="double" />
+
+    <!--school-->
+    <!--<param name="UTM_OFFSET_X" value="362169.6526" type="double" />
+    <param name="UTM_OFFSET_Y" value="4054407.07" type="double" />-->
+
+    <!--ochang-->
+    <!--<param name="UTM_OFFSET_X" value="361001.412425" type="double" />
+    <param name="UTM_OFFSET_Y" value="4065821.07176" type="double" />-->
+
+    <!--k-city-->
+    <!--<param name="UTM_OFFSET_X" value="302533.174487" type="double" />
+    <param name="UTM_OFFSET_Y" value="4124215.34631" type="double" />-->
+
+    <!--sim-->
+    <param name="UTM_OFFSET_X" value="0.0" type="double" />
+    <param name="UTM_OFFSET_Y" value="0.0" type="double" />
+
+ </node>
 
 </launch>

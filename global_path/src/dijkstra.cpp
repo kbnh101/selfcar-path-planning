@@ -5,8 +5,8 @@ dijkstra::dijkstra()
     ros::NodeHandle nh;
     ros::NodeHandle pnh;
 
-    pnh.param("UTM_OFFSET_X",OFFSET_X,302459.942);
-    pnh.param("UTM_OFFSET_Y",OFFSET_Y,4122635.537);
+    pnh.param<double>("UTM_OFFSET_X",OFFSET_X,302459.942);
+    pnh.param<double>("UTM_OFFSET_Y",OFFSET_Y,4122635.537);
 
     //subscribe
     map_sub = nh.subscribe("map",10,&dijkstra::MapCallback,this);
