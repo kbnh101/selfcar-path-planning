@@ -94,9 +94,10 @@ void ros_data::speed_callback(const std_msgs::Int32 &msg)
 void ros_data::state_callback(const std_msgs::String &msg)
 {
     state = msg.data;
-    if(parking_state == true && state == "diagonal_parking" || state == "parallel_parking")
+    if(parking_state == true && (state == "diagonal_parking" || state == "parallel_parking"))
     {
-        state = "no";
+        state = "go";
+        speed = 15;
     }
     else if(state != "digonal_parking" || state != "parallel_parking")
     {

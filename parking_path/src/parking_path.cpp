@@ -9,7 +9,7 @@ parking_path::parking_path()
     pnh.param("offset_y", offset_y, 4122635.537);
 
     //Publish
-    parking_path_pub = nh.advertise<nav_msgs::Path>("parking_path",10);
+    parking_path_pub = nh.advertise<nav_msgs::Path>("parking_path",20);
     stop_area_pub = nh.advertise<geometry_msgs::Polygon>("fucking_stop",10);
 
     //Subscriber
@@ -187,14 +187,32 @@ void parking_path::process()
     }
     else if(state == "parallel_parking")
     {
-        if(find_rightpath(parallel_path1, object) == true)
+        int index = 0;
+        path_withcost.at(0).cost = 100;
+        path_withcost.at(1).cost = 100;
+        path_withcost.at(2).cost = 100;
+        path_withcost.at(3).cost = 100;
+        path_withcost.at(4).cost = 100;
+        path_withcost.at(5).cost = 100;
+        if(find_rightpath(parallel_path1, object) == false && path_withcost.at(6).cost == 1)
         {
-            parking_path_pub.publish(parallel_path1);
+            path_withcost.at(6).cost = 100;
         }
-        else if(find_rightpath(parallel_path2, object) == true)
+        else if(find_rightpath(parallel_path2, object) == false && path_withcost.at(7).cost == 1)
         {
-            parking_path_pub.publish(parallel_path2);
+            path_withcost.at(7).cost = 100;
         }
+        for(int i = 0; i<path_withcost.size(); i++)
+        {
+            if(path_withcost.at(i).cost == 1)
+            {
+                index = i;
+                break;
+            }
+        }
+        parking_path_pub.publish(path_withcost.at(index).path);
+        stop_area_pub.publish(stop_area);
+        stop_area.points.clear();
     }
     else
     {

@@ -184,7 +184,7 @@ void dijkstra::find_path(cv::Point2d start_point, cv::Point2d dst_point)
             }
         }
     }
-    end_node = node.at(16).id;
+    end_node = node.at(22).id;
     exend = Wend_num;
 
     for (int i = 0; i < edge.size(); i++)
@@ -404,8 +404,8 @@ int main(int argc, char * argv[])
     path.flag = false;
     path.Done = false;
 
-    ifstream file_edge("/home/a/morai_ws/src/morai/global_path/path_data/kcity/22.08.03_kcity_test_edge.csv");
-    ifstream file_node("/home/a/morai_ws/src/morai/global_path/path_data/kcity/22.08.03_kcity_test_node.csv");
+    ifstream file_edge("/home/a/morai_ws/src/morai/global_path/path_data/kcity/final_edge.csv");
+    ifstream file_node("/home/a/morai_ws/src/morai/global_path/path_data/kcity/final_node.csv");
 
     path.node_parse(file_node);
     path.edge_parse(file_edge);

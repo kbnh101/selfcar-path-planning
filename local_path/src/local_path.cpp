@@ -284,8 +284,10 @@ void local_path::local_map()
 
 void local_path::process()
 {
-    if(state == "diagonal_parking")
+    if(state == "diagonal_parking" || state == "parallel_parking")
     {
+        flag = true;
+        num = 10;
         path_tracking(parking_path);
     }
     else
@@ -353,7 +355,7 @@ void local_path::process()
 
                 ros::Duration(5.0).sleep();
                 parking_state = true;
-                num = 30;
+                num = 20;
             }
         }
         else
