@@ -1,0 +1,31 @@
+<launch>
+
+ <node pkg="local_path_tryout" type="local_path_tryout" name="local_path" output="screen">
+    <param name="max_lfd" value="10.0" type="double" />
+    <param name="min_lfd" value="1.6" type="double" />
+    <param name="num" value="20" type="int" />
+    <param name="path_param" value="1.0" type="double" />
+    <param name="avoid_mindist" value="0.8" type="double" />
+    <param name="avoid_objdist" value="5.0" type="double" />
+    <param name="dynamic_mindist" value="1.5" type="double" />
+    <param name="dynamic_objdist" value="12.0" type="double" />
+
+    <!--school-->
+    <!--<param name="UTM_OFFSET_X" value="362169.6526" type="double" />
+    <param name="UTM_OFFSET_Y" value="4054407.07" type="double" />-->
+
+    <!--ochang-->
+    <!--<param name="UTM_OFFSET_X" value="361001.412425" type="double" />
+    <param name="UTM_OFFSET_Y" value="4065821.07176" type="double" />-->
+
+    <!--k-city-->
+    <!--<param name="UTM_OFFSET_X" value="302533.174487" type="double" />
+    <param name="UTM_OFFSET_Y" value="4124215.34631" type="double" />-->
+
+    <!--sim-->
+    <param name="UTM_OFFSET_X" value="0.0" type="double" />
+    <param name="UTM_OFFSET_Y" value="0.0" type="double" />
+
+ </node>
+
+</launch>

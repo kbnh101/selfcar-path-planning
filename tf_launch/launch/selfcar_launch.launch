@@ -1,9 +1,9 @@
 <launch>
-  	<include file="$(find global_path_selfcar)/launch/path.launch"/>
+  	<include file="$(find global_path_selfcar_tryout)/launch/path.launch"/>
 
 	<node pkg="selfcar_launch" type="tf_make" name="tf"/>
 	
-	<include file="$(find local_path_control)/launch/control.launch"/>
+	<include file="$(find local_path_tryout)/launch/control.launch"/>
 	
 	<include file="$(find localizer)/launch/localizer.launch"/>
 	
