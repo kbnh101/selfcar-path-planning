@@ -5,8 +5,10 @@ dijkstra::dijkstra()
     ros::NodeHandle nh;
     ros::NodeHandle pnh;
 
-    pnh.param<double>("UTM_OFFSET_X",OFFSET_X,302459.942);
-    pnh.param<double>("UTM_OFFSET_Y",OFFSET_Y,4122635.537);
+    pnh.param<double>("OFFSET_X",OFFSET_X,302459.942);
+    pnh.param<double>("OFFSET_Y",OFFSET_Y,4122635.537);
+    pnh.param<string>("edge_location", edge_location, "/home/a/morai_ws/src/morai/global_path/path_data/kcity/semi_final_edge.csv");
+    pnh.param<string>("node_location", node_location, "/home/a/morai_ws/src/morai/global_path/path_data/kcity/semi_final_node.csv");
 
     //subscribe
     map_sub = nh.subscribe("map",10,&dijkstra::MapCallback,this);
@@ -184,7 +186,7 @@ void dijkstra::find_path(cv::Point2d start_point, cv::Point2d dst_point)
             }
         }
     }
-    end_node = node.at(22).id;
+    end_node = node.at(12).id;
     exend = Wend_num;
 
     for (int i = 0; i < edge.size(); i++)
@@ -404,8 +406,8 @@ int main(int argc, char * argv[])
     path.flag = false;
     path.Done = false;
 
-    ifstream file_edge("/home/a/morai_ws/src/morai/global_path/path_data/kcity/final_edge.csv");
-    ifstream file_node("/home/a/morai_ws/src/morai/global_path/path_data/kcity/final_node.csv");
+    ifstream file_edge(path.edge_location);
+    ifstream file_node(path.node_location);
 
     path.node_parse(file_node);
     path.edge_parse(file_edge);

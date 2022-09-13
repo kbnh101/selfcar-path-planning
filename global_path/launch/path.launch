@@ -9,8 +9,11 @@
     <param name="UTM_OFFSET_Y" value="4124215.34631" type="double" />-->
 
     <!--sim-->
-    <param name="UTM_OFFSET_X" value="302459.942" type="double" />
-    <param name="UTM_OFFSET_Y" value="4122635.537" type="double" />
+    <param name="OFFSET_X" value="302459.942" type="double" />
+    <param name="OFFSET_Y" value="4122635.537" type="double" />
+
+    <param name="edge_location" value="/home/a/morai_ws/src/morai/global_path/path_data/kcity/semi_final_edge.csv" type="string" />
+    <param name="node_location" value="/home/a/morai_ws/src/morai/global_path/path_data/kcity/semi_final_node.csv" type="string" />
 </node>
 
 

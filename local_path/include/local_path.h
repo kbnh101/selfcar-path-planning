@@ -43,6 +43,7 @@ public:
     //Function
     void local_map();
     void path_tracking(nav_msgs::Path global_path);
+    std::pair<int, double> calc_dist(sensor_msgs::PointCloud object, nav_msgs::Path path);
     void static_object(sensor_msgs::PointCloud object, nav_msgs::Path path);
     void dynamic_object(sensor_msgs::PointCloud object);
     double node_distance();

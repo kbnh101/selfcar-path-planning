@@ -75,6 +75,8 @@ public:
     bool Done, fuckyou;
     double resolution;
     double OFFSET_X, OFFSET_Y;
+    string edge_location;
+    string node_location;
     queue<int> Queue;
     vector<Edge> spath;
     vector<int> shortest_path;

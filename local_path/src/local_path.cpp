@@ -15,38 +15,54 @@ local_path::local_path()
     dynamic = false;
 }
 
+std::pair<int, double> local_path::calc_dist(sensor_msgs::PointCloud object, nav_msgs::Path path)
+{
+    std::pair<int, double> index_dist;
+
+    double min_dist = 100.0;
+    int closest_index = 0;
+
+    for(int i = 0; i < path.poses.size(); i++)
+    {
+        for(int j = 0; j < object.points.size(); j++)
+        {
+            double path_x = path.poses.at(i).pose.position.x;
+            double path_y = path.poses.at(i).pose.position.y;
+
+            double rotated_x = cos(vehicle_yaw)*object.points.at(j).x - sin(vehicle_yaw)*object.points.at(j).y;
+            double rotated_y = sin(vehicle_yaw)*object.points.at(j).x + cos(vehicle_yaw)*object.points.at(j).y;
+
+            double obj_x = rotated_x + pose.pose.position.x;
+            double obj_y = rotated_y + pose.pose.position.y;
+
+            double dx = path_x - obj_x;
+            double dy = path_y - obj_y;
+
+            double dist = sqrt(dx*dx + dy*dy);
+
+            if(dist<min_dist)
+            {
+                min_dist = dist;
+                closest_index = j;
+            }
+        }
+    }
+
+    index_dist.first = closest_index;
+    index_dist.second = min_dist;
+
+    return index_dist;
+}
+
 void local_path::dynamic_object(sensor_msgs::PointCloud object)
 {
     if(object.points.size() > 0)
     {
-        double min_dist = 100.0;
-        int closest_index = 0;
+        std::pair<int, double> index_dist = calc_dist(object, path);
 
-        for(int i = 0; i < path.poses.size(); i++)
-        {
-            for(int j = 0; j < object.points.size(); j++)
-            {
-                double path_x = path.poses.at(i).pose.position.x;
-                double path_y = path.poses.at(i).pose.position.y;
+        double min_dist = index_dist.second;
+        int closest_index = index_dist.first;
 
-                double rotated_x = cos(vehicle_yaw)*object.points.at(j).x - sin(vehicle_yaw)*object.points.at(j).y;
-                double rotated_y = sin(vehicle_yaw)*object.points.at(j).x + cos(vehicle_yaw)*object.points.at(j).y;
-
-                double obj_x = rotated_x + pose.pose.position.x;
-                double obj_y = rotated_y + pose.pose.position.y;
-
-                double dx = path_x - obj_x;
-                double dy = path_y - obj_y;
-
-                double dist = sqrt(dx*dx + dy*dy);
-
-                if(dist<min_dist)
-                {
-                    min_dist = dist;
-                    closest_index = j;
-                }
-            }
-        }
         double x = object.points.at(closest_index).x;
         double y = object.points.at(closest_index).y;
 
@@ -63,34 +79,11 @@ void local_path::static_object(sensor_msgs::PointCloud object, nav_msgs::Path pa
 {
     if(object.points.size() > 0 && avoid == false)
     {
-        double min_dist = 100.0;
-        int closest_index = 0;
+        std::pair<int, double> index_dist = calc_dist(object, path);
 
-        for(int i = 0; i < path.poses.size(); i++)
-        {
-            for(int j = 0; j < object.points.size(); j++)
-            {
-                double path_x = path.poses.at(i).pose.position.x;
-                double path_y = path.poses.at(i).pose.position.y;
+        double min_dist = index_dist.second;
+        int closest_index = index_dist.first;
 
-                double rotated_x = cos(vehicle_yaw)*object.points.at(j).x - sin(vehicle_yaw)*object.points.at(j).y;
-                double rotated_y = sin(vehicle_yaw)*object.points.at(j).x + cos(vehicle_yaw)*object.points.at(j).y;
-
-                double obj_x = rotated_x + pose.pose.position.x;
-                double obj_y = rotated_y + pose.pose.position.y;
-
-                double dx = path_x - obj_x;
-                double dy = path_y - obj_y;
-
-                double dist = sqrt(dx*dx + dy*dy);
-
-                if(dist<min_dist)
-                {
-                    min_dist = dist;
-                    closest_index = j;
-                }
-            }
-        }
         double x = object.points.at(closest_index).x;
         double y = object.points.at(closest_index).y;
 
@@ -101,34 +94,11 @@ void local_path::static_object(sensor_msgs::PointCloud object, nav_msgs::Path pa
     }
     else if(object.points.size() > 0 && avoid == true)
     {
-        double min_dist = 100.0;
-        int closest_index = 0;
+        std::pair<int, double> index_dist = calc_dist(object, path);
 
-        for(int i = 0; i < path.poses.size(); i++)
-        {
-            for(int j = 0; j < object.points.size(); j++)
-            {
-                double path_x = path.poses.at(i).pose.position.x;
-                double path_y = path.poses.at(i).pose.position.y;
+        double min_dist = index_dist.second;
+        int closest_index = index_dist.first;
 
-                double rotated_x = cos(vehicle_yaw)*object.points.at(j).x - sin(vehicle_yaw)*object.points.at(j).y;
-                double rotated_y = sin(vehicle_yaw)*object.points.at(j).x + cos(vehicle_yaw)*object.points.at(j).y;
-
-                double obj_x = rotated_x + pose.pose.position.x;
-                double obj_y = rotated_y + pose.pose.position.y;
-
-                double dx = path_x - obj_x;
-                double dy = path_y - obj_y;
-
-                double dist = sqrt(dx*dx + dy*dy);
-
-                if(dist<min_dist)
-                {
-                    min_dist = dist;
-                    closest_index = j;
-                }
-            }
-        }
         double x = object.points.at(closest_index).x;
         double y = object.points.at(closest_index).y;
 
