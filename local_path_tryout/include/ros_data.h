@@ -28,7 +28,7 @@
 #include<sensor_msgs/PointCloud.h>
 
 #include<morai_msgs/CtrlCmd.h>
-#include<data_transfer_msg/data_transfer.h>
+#include<data_transfer_msg/traffic_light.h>
 
 class ros_data
 {
@@ -62,7 +62,7 @@ public:
 
     sensor_msgs::PointCloud object_point;
 
-    data_transfer_msg::data_transfer camera_data;
+    data_transfer_msg::traffic_light traffic_data;
 
     //Publish
     ros::Publisher cmd_pub;
@@ -95,7 +95,7 @@ public:
     void state_callback(const std_msgs::String &msg);
     void sim_pose_callback(const nav_msgs::Odometry &msg);
     void object_callback(const sensor_msgs::PointCloud &msg);
-    void camera_callback(const data_transfer_msg::data_transfer &msg);
+    void camera_callback(const data_transfer_msg::traffic_light &msg);
     void node_callback(const geometry_msgs::Polygon &msg);
     void parking_path_callback(const nav_msgs::Path &msg);
     void parking_stop_callback(const geometry_msgs::Polygon &msg);

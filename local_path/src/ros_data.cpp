@@ -133,7 +133,7 @@ void ros_data::object_callback(const sensor_msgs::PointCloud &msg)
     object_point = msg;
 }
 
-void ros_data::camera_callback(const data_transfer_msg::data_transfer &msg)
+void ros_data::camera_callback(const data_transfer_msg::traffic_light &msg)
 {
-    camera_data = msg;
+    traffic_data = msg;
 }

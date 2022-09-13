@@ -50,7 +50,7 @@ double pure_pursuit::steering_angle(geometry_msgs::PoseWithCovariance pose, nav_
     double rotated_x = 0;
     double rotated_y = 0;
 
-    lfd = velocity/3.0;
+    lfd = velocity/1.0;
 
     if(lfd < min_lfd)
     {

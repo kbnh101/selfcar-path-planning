@@ -272,7 +272,7 @@ void local_path::process()
         cmd_vel_.brake = 0;
         //fucking erp42
         cmd_vel.angular.z = -1 * steering_angle(pose, tracking_path, vehicle_yaw, speed);
-        if(camera_data.traffic_light == "RED")
+        if(traffic_data.Traffic_light == "RED")
         {
             std::cout<<"oh good"<<std::endl;
         }
@@ -282,17 +282,17 @@ void local_path::process()
             cmd_vel.linear.x = speed;
             cmd_vel_.velocity = speed;
             ///////////////////traffic light///////////////////
-            if(camera_data.traffic_light == "YELLOW" )
+            if(traffic_data.Traffic_light == "YELLOW" )
             {
                 cmd_vel.linear.x = 5;
                 cmd_vel_.velocity = 5;
             }
-            else if(camera_data.traffic_light == "RED" && node_distance() <10 && node_distance()>=5)
+            else if(traffic_data.Traffic_light == "RED" && node_distance() <10 && node_distance()>=5)
             {
                 cmd_vel.linear.x = 5;
                 cmd_vel_.velocity = 5;
             }
-            else if(camera_data.traffic_light == "RED")
+            else if(traffic_data.Traffic_light == "RED")
             {
                 cmd_vel.linear.x = 0;
                 cmd_vel_.velocity = 0;
@@ -305,6 +305,10 @@ void local_path::process()
             else if(state == "dynamic")
             {
                 dynamic_object(object_point);
+            }
+            else if(state != "static")
+            {
+                avoid = false;
             }
             ///////////////////stop dynamic object///////////////////
             if(dynamic == true)

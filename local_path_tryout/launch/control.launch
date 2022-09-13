@@ -2,7 +2,7 @@
 
  <node pkg="local_path_tryout" type="local_path_tryout" name="local_path" output="screen">
     <param name="max_lfd" value="10.0" type="double" />
-    <param name="min_lfd" value="1.6" type="double" />
+    <param name="min_lfd" value="1.4" type="double" />
     <param name="num" value="20" type="int" />
     <param name="path_param" value="1.0" type="double" />
     <param name="avoid_mindist" value="0.8" type="double" />
